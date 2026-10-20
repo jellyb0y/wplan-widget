@@ -1,0 +1,42 @@
+{
+  "name": "wplan-tracker",
+  "version": "0.1.0",
+  "description": "macOS menu-bar приложение для учёта рабочего дня в WPlan",
+  "license": "MIT",
+  "private": true,
+  "main": "dist/main.js",
+  "scripts": {
+    "icons": "electron scripts/gen-logo-icons.js",
+    "build": "tsc -p tsconfig.json && node scripts/copy-renderer.js",
+    "start": "npm run build && electron .",
+    "probe": "npm run build && electron dist/probe.js",
+    "dist": "npm run build && electron-builder"
+  },
+  "build": {
+    "appId": "pw.click4money.wplan-tracker",
+    "productName": "WPlan Tracker",
+    "files": ["dist/**/*", "assets/**/*"],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": ["dmg", "dir"],
+      "icon": "assets/appIcon.icns",
+      "identity": null
+    },
+    "dmg": {
+      "title": "WPlan Tracker",
+      "contents": [
+        { "x": 140, "y": 160 },
+        { "x": 400, "y": 160, "type": "link", "path": "/Applications" }
+      ]
+    },
+    "extendInfo": {
+      "LSUIElement": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "typescript": "^5.7.2"
+  }
+}

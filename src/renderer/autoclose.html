@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Автозакрытие — WPlan</title>
+    <style>
+      :root { --accent: #0a84ff; color-scheme: light dark; }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; margin: 0; }
+      body {
+        font: 13px/1.4 -apple-system, BlinkMacSystemFont, sans-serif; color: canvastext;
+        -webkit-user-select: none; -webkit-app-region: drag;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        text-align: center; padding: 20px; gap: 12px;
+      }
+      h1 { font-size: 15px; font-weight: 600; margin: 0; }
+      p { margin: 0; opacity: 0.6; font-size: 12px; }
+      .count { font-size: 30px; font-weight: 300; font-variant-numeric: tabular-nums; }
+      .btns { display: flex; gap: 8px; width: 100%; -webkit-app-region: no-drag; }
+      button { flex: 1; padding: 9px; font: inherit; font-weight: 500; border: none;
+               border-radius: 8px; cursor: pointer; }
+      .primary { background: var(--accent); color: #fff; }
+      .ghost { background: color-mix(in srgb, canvastext 12%, transparent); color: canvastext; }
+    </style>
+  </head>
+  <body>
+    <h1>Завершить рабочий день?</h1>
+    <p>Автозакрытие, чтобы день засчитался</p>
+    <div class="count" id="count">60</div>
+    <div class="btns">
+      <button class="ghost" id="cancel">Отменить</button>
+      <button class="primary" id="now">Завершить сейчас</button>
+    </div>
+    <script>
+      let seconds = 60;
+      api.on('autoclose:init', (s) => {
+        seconds = Number(s) || 60;
+        document.getElementById('count').textContent = seconds;
+      });
+      const tick = setInterval(() => {
+        seconds -= 1;
+        document.getElementById('count').textContent = Math.max(0, seconds);
+        if (seconds <= 0) { clearInterval(tick); api.invoke('autoclose:result', true); }
+      }, 1000);
+      document.getElementById('cancel').addEventListener('click', () => {
+        clearInterval(tick); api.invoke('autoclose:result', false);
+      });
+      document.getElementById('now').addEventListener('click', () => {
+        clearInterval(tick); api.invoke('autoclose:result', true);
+      });
+    </script>
+  </body>
+</html>

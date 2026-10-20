@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Вход — WPlan Tracker</title>
+    <style>
+      :root {
+        --accent: #0a84ff;
+        --radius: 9px;
+        color-scheme: light dark;
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; margin: 0; }
+      body {
+        font: 13px/1.4 -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+        color: canvastext;
+        -webkit-user-select: none;
+        display: flex;
+        flex-direction: column;
+        padding: 28px 26px 22px;
+        gap: 14px;
+      }
+      .drag { -webkit-app-region: drag; position: fixed; top: 0; left: 0; right: 0; height: 28px; }
+      header { text-align: center; margin-top: 4px; }
+      .mark {
+        width: 44px; height: 44px; border-radius: 12px; margin: 0 auto 10px;
+        background: linear-gradient(135deg, #0a84ff, #0060df);
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-size: 22px; font-weight: 600;
+      }
+      h1 { font-size: 15px; font-weight: 600; margin: 0; }
+      .sub { font-size: 11px; opacity: 0.5; margin-top: 2px; }
+      label { font-size: 11px; opacity: 0.6; display: block; margin: 0 0 4px 2px; }
+      input {
+        width: 100%; padding: 8px 10px; font-size: 13px;
+        border: 1px solid color-mix(in srgb, canvastext 15%, transparent);
+        border-radius: var(--radius);
+        background: color-mix(in srgb, canvas 70%, transparent);
+        color: canvastext; outline: none;
+      }
+      input:focus { border-color: var(--accent); }
+      .field { -webkit-app-region: no-drag; }
+      button {
+        -webkit-app-region: no-drag;
+        width: 100%; padding: 9px; font-size: 13px; font-weight: 500;
+        border: none; border-radius: var(--radius);
+        background: var(--accent); color: #fff; cursor: pointer;
+        margin-top: 4px;
+      }
+      button:disabled { opacity: 0.5; cursor: default; }
+      .err { color: #ff453a; font-size: 11px; min-height: 14px; text-align: center; }
+      .hint { font-size: 10px; opacity: 0.4; text-align: center; }
+    </style>
+  </head>
+  <body>
+    <div class="drag"></div>
+    <header>
+      <div class="mark">W</div>
+      <h1>WPlan Tracker</h1>
+      <div class="sub" id="host">wplan.office.lan</div>
+    </header>
+    <div class="field">
+      <label for="u">Логин</label>
+      <input id="u" type="text" autocomplete="username" placeholder="логин" autofocus />
+    </div>
+    <div class="field">
+      <label for="p">Пароль</label>
+      <input id="p" type="password" autocomplete="current-password" placeholder="••••••••" />
+    </div>
+    <div class="err" id="err"></div>
+    <button id="go">Войти</button>
+    <div class="hint">Данные хранятся локально в связке ключей</div>
+    <script>
+      const $ = (id) => document.getElementById(id);
+      api.invoke('auth:host').then((h) => ($('host').textContent = h));
+      async function submit() {
+        const username = $('u').value.trim();
+        const password = $('p').value;
+        if (!username || !password) return;
+        $('go').disabled = true;
+        $('err').textContent = '';
+        const res = await api.invoke('auth:login', { username, password });
+        if (res && res.ok) return; // окно закроет main
+        $('err').textContent = (res && res.error) || 'Ошибка входа';
+        $('go').disabled = false;
+      }
+      $('go').addEventListener('click', submit);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') submit();
+      });
+    </script>
+  </body>
+</html>
