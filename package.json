@@ -16,6 +16,7 @@
   "build": {
     "appId": "pw.click4money.wplan-tracker",
     "productName": "WPlan Tracker",
+    "afterPack": "scripts/after-pack.js",
     "files": ["dist/**/*", "assets/**/*"],
     "mac": {
       "category": "public.app-category.productivity",
