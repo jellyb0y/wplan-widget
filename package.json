@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "macOS menu-bar приложение для учёта рабочего дня в WPlan",
   "license": "MIT",
+  "author": "jellyb0y",
   "private": true,
   "main": "dist/main.js",
   "scripts": {
@@ -20,7 +21,10 @@
       "category": "public.app-category.productivity",
       "target": ["dmg", "dir"],
       "icon": "assets/appIcon.icns",
-      "identity": null
+      "identity": null,
+      "extendInfo": {
+        "LSUIElement": true
+      }
     },
     "dmg": {
       "title": "WPlan Tracker",
@@ -28,9 +32,6 @@
         { "x": 140, "y": 160 },
         { "x": 400, "y": 160, "type": "link", "path": "/Applications" }
       ]
-    },
-    "extendInfo": {
-      "LSUIElement": true
     }
   },
   "devDependencies": {
