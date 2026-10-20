@@ -1,6 +1,6 @@
 {
   "name": "wplan-tracker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "macOS menu-bar приложение для учёта рабочего дня в WPlan",
   "license": "MIT",
   "author": "jellyb0y",
